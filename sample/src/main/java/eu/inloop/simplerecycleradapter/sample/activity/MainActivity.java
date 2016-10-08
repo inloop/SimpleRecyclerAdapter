@@ -37,11 +37,6 @@ public class MainActivity extends AppCompatActivity implements ItemActionListene
             public MyDataViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
                 return new MyDataViewHolder(MainActivity.this, R.layout.item_mydata, parent);
             }
-
-            @Override
-            protected long getItemId(final MyDataObject item, int position) {
-                return item.getId();
-            }
         });
         mRecyclerView.setAdapter(mRecyclerAdapter);
     }

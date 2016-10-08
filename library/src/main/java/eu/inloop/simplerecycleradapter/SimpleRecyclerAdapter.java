@@ -17,7 +17,9 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
     public static abstract class CreateViewHolder<T, VH> {
         protected abstract VH onCreateViewHolder(final ViewGroup parent, final int viewType);
 
-        protected abstract long getItemId(final T item, final int position);
+        protected long getItemId(final T item, final int position) {
+            return RecyclerView.NO_ID;
+        }
 
         protected int getItemViewType(final int position) {
             return 0;
@@ -43,10 +45,16 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
 
     public SimpleRecyclerAdapter(final @Nullable ItemActionListener<T, VH> actionListener,
                                  final @NonNull CreateViewHolder<T, VH> createViewHolderListener) {
+        this(actionListener, createViewHolderListener, false);
+    }
+
+    public SimpleRecyclerAdapter(final @Nullable ItemActionListener<T, VH> actionListener,
+                                 final @NonNull CreateViewHolder<T, VH> createViewHolderListener,
+                                 final boolean hasStableIds) {
         mItems = new ArrayList<>();
         mActionListener = actionListener;
         mCreateViewHolderListener = createViewHolderListener;
-        setHasStableIds(true);
+        setHasStableIds(hasStableIds);
     }
 
     @Override
