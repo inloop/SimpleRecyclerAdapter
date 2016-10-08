@@ -17,9 +17,7 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
     public static abstract class CreateViewHolder<T, VH> {
         protected abstract VH onCreateViewHolder(final ViewGroup parent, final int viewType);
 
-        protected long getItemId(final T item, final int position) {
-            return RecyclerView.NO_ID;
-        }
+        protected abstract long getItemId(final T item, final int position);
 
         protected int getItemViewType(final int position) {
             return 0;
@@ -66,14 +64,16 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
             mModifyViewHolderListener.modifyViewHolder(item, holder, position);
         }
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                if (mActionListener != null && holder.isClickable()) {
-                    mActionListener.onItemClick(item, holder, -1);
+        if (mActionListener != null) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View view) {
+                    if (holder.isClickable()) {
+                        mActionListener.onItemClick(item, holder, -1);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     public void setModifyViewHolderListener(final @Nullable ModifyViewHolder<T, VH> listener) {
