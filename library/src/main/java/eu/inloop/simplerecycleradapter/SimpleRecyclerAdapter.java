@@ -74,7 +74,15 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
 
         if (mActionListener != null) {
             if (holder.isClickable()) {
-                holder.itemView.setTag(new TagWrapper<>(item, holder));
+                @SuppressWarnings("unchecked")
+                TagWrapper<T,VH> tagWrapper = (TagWrapper<T, VH>) holder.itemView.getTag();
+                if (tagWrapper == null) {
+                    tagWrapper = new TagWrapper<>(item, holder);
+                } else {
+                    tagWrapper.item = item;
+                    tagWrapper.viewholder = holder;
+                }
+                holder.itemView.setTag(tagWrapper);
                 holder.itemView.setOnClickListener(mOnClickListener);
             } else {
                 holder.itemView.setOnClickListener(null);
@@ -83,7 +91,15 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
             final List<? extends View> clickableAreas = holder.getInnerClickableAreas();
             if (clickableAreas != null) {
                 for (final View area : clickableAreas) {
-                    area.setTag(new TagWrapper<>(item, holder));
+                    @SuppressWarnings("unchecked")
+                    TagWrapper<T,VH> tagWrapper = (TagWrapper<T, VH>) area.getTag();
+                    if (tagWrapper == null) {
+                        tagWrapper = new TagWrapper<>(item, holder);
+                    } else {
+                        tagWrapper.item = item;
+                        tagWrapper.viewholder = holder;
+                    }
+                    area.setTag(tagWrapper);
                     area.setOnClickListener(mOnClickListener);
                 }
             }
@@ -91,8 +107,8 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
     }
 
     private static class TagWrapper <T, VH> {
-        final T item;
-        final VH viewholder;
+        T item;
+        VH viewholder;
 
         public TagWrapper(T item, VH viewholder) {
             this.item = item;
@@ -100,6 +116,7 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
         }
     }
 
+    @NonNull
     private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(final View view) {
