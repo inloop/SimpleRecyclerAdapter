@@ -13,6 +13,9 @@ import java.util.List;
 
 public abstract class SettableViewHolder<R> extends RecyclerView.ViewHolder {
 
+    @Nullable
+    private List<? extends View> mClickableAreas;
+
     public SettableViewHolder(View itemView) {
         super(itemView);
     }
@@ -25,6 +28,16 @@ public abstract class SettableViewHolder<R> extends RecyclerView.ViewHolder {
 
     public boolean isClickable() {
         return true;
+    }
+
+    @Nullable
+    List<? extends View> getCachedClickableAreas() {
+        if (null != mClickableAreas) {
+            return mClickableAreas;
+        } else {
+            mClickableAreas = getInnerClickableAreas();
+            return mClickableAreas;
+        }
     }
 
     @Nullable

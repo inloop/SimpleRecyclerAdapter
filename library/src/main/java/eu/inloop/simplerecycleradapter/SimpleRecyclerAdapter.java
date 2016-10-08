@@ -74,36 +74,31 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
 
         if (mActionListener != null) {
             if (holder.isClickable()) {
-                @SuppressWarnings("unchecked")
-                TagWrapper<T,VH> tagWrapper = (TagWrapper<T, VH>) holder.itemView.getTag();
-                if (tagWrapper == null) {
-                    tagWrapper = new TagWrapper<>(item, holder);
-                } else {
-                    tagWrapper.item = item;
-                    tagWrapper.viewholder = holder;
-                }
-                holder.itemView.setTag(tagWrapper);
-                holder.itemView.setOnClickListener(mOnClickListener);
+                setClickListener(holder.itemView, item, holder);
             } else {
                 holder.itemView.setOnClickListener(null);
             }
 
-            final List<? extends View> clickableAreas = holder.getInnerClickableAreas();
+            final List<? extends View> clickableAreas = holder.getCachedClickableAreas();
             if (clickableAreas != null) {
                 for (final View area : clickableAreas) {
-                    @SuppressWarnings("unchecked")
-                    TagWrapper<T,VH> tagWrapper = (TagWrapper<T, VH>) area.getTag();
-                    if (tagWrapper == null) {
-                        tagWrapper = new TagWrapper<>(item, holder);
-                    } else {
-                        tagWrapper.item = item;
-                        tagWrapper.viewholder = holder;
-                    }
-                    area.setTag(tagWrapper);
-                    area.setOnClickListener(mOnClickListener);
+                    setClickListener(area, item, holder);
                 }
             }
         }
+    }
+
+    private void setClickListener(@NonNull final View view, @NonNull final T item, @NonNull final VH holder) {
+        @SuppressWarnings("unchecked")
+        TagWrapper<T,VH> tagWrapper = (TagWrapper<T, VH>) view.getTag();
+        if (tagWrapper == null) {
+            tagWrapper = new TagWrapper<>(item, holder);
+        } else {
+            tagWrapper.item = item;
+            tagWrapper.viewholder = holder;
+        }
+        view.setTag(tagWrapper);
+        view.setOnClickListener(mOnClickListener);
     }
 
     private static class TagWrapper <T, VH> {
