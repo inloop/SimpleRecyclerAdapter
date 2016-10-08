@@ -73,15 +73,31 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
         }
 
         if (mActionListener != null) {
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View view) {
-                    if (holder.isClickable()) {
-                        mActionListener.onItemClick(item, holder, -1);
-                    }
+            if (holder.isClickable()) {
+                holder.itemView.setOnClickListener(createClickListener(item, holder, holder.itemView));
+            } else {
+                holder.itemView.setOnClickListener(null);
+            }
+
+            List<? extends View> clickableAreas = holder.getInnerClickableAreas();
+            if (clickableAreas != null) {
+                for (View area : clickableAreas) {
+                    area.setOnClickListener(createClickListener(item, holder, area));
                 }
-            });
+            }
         }
+    }
+
+    @NonNull
+    private View.OnClickListener createClickListener(final T item, final VH holder, final View view) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                if (mActionListener != null) {
+                    mActionListener.onItemClick(item, holder, view);
+                }
+            }
+        };
     }
 
     public void setModifyViewHolderListener(final @Nullable ModifyViewHolder<T, VH> listener) {

@@ -80,10 +80,15 @@ public class AdvancedAdapterActivity extends AppCompatActivity implements ItemAc
     }
 
     @Override
-    public void onItemClick(@NonNull WrappedMyDataObject item, @NonNull SettableViewHolder viewHolder, int id) {
+    public void onItemClick(@NonNull WrappedMyDataObject item, @NonNull SettableViewHolder viewHolder, @NonNull View view) {
         if (item.getType() == WrappedMyDataObject.ITEM_TYPE_NORMAL) {
             MyDataObject dataObject = item.getDataObject();
-            setTitle("Last clicked item: " + dataObject.getTitle());
+
+            if (view.getId() == R.id.btn_more) {
+                setTitle("Action clicked on item: " + dataObject.getTitle());
+            } else {
+                setTitle("Last clicked item: " + dataObject.getTitle());
+            }
         }
     }
 }

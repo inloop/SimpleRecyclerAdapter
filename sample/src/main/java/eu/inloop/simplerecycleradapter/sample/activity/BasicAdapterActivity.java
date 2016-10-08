@@ -60,7 +60,7 @@ public class BasicAdapterActivity extends AppCompatActivity implements ItemActio
     }
 
     @Override
-    public void onItemClick(@NonNull MyDataObject item, @NonNull MyDataViewHolder viewHolder, int id) {
+    public void onItemClick(@NonNull MyDataObject item, @NonNull MyDataViewHolder viewHolder, @NonNull View view) {
         setTitle("Last clicked item: " + item.getTitle());
     }
 }
