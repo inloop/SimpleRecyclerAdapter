@@ -74,31 +74,42 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
 
         if (mActionListener != null) {
             if (holder.isClickable()) {
-                holder.itemView.setOnClickListener(createClickListener(item, holder, holder.itemView));
+                holder.itemView.setTag(new TagWrapper<>(item, holder));
+                holder.itemView.setOnClickListener(mOnClickListener);
             } else {
                 holder.itemView.setOnClickListener(null);
             }
 
-            List<? extends View> clickableAreas = holder.getInnerClickableAreas();
+            final List<? extends View> clickableAreas = holder.getInnerClickableAreas();
             if (clickableAreas != null) {
-                for (View area : clickableAreas) {
-                    area.setOnClickListener(createClickListener(item, holder, area));
+                for (final View area : clickableAreas) {
+                    area.setTag(new TagWrapper<>(item, holder));
+                    area.setOnClickListener(mOnClickListener);
                 }
             }
         }
     }
 
-    @NonNull
-    private View.OnClickListener createClickListener(final T item, final VH holder, final View view) {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                if (mActionListener != null) {
-                    mActionListener.onItemClick(item, holder, view);
-                }
-            }
-        };
+    private static class TagWrapper <T, VH> {
+        final T item;
+        final VH viewholder;
+
+        public TagWrapper(T item, VH viewholder) {
+            this.item = item;
+            this.viewholder = viewholder;
+        }
     }
+
+    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(final View view) {
+            if (mActionListener != null) {
+                @SuppressWarnings("unchecked")
+                final TagWrapper<T, VH> tagWrapper = (TagWrapper<T, VH>) view.getTag();
+                mActionListener.onItemClick(tagWrapper.item, tagWrapper.viewholder, view);
+            }
+        }
+    };
 
     public void setModifyViewHolderListener(final @Nullable ModifyViewHolder<T, VH> listener) {
         mModifyViewHolderListener = listener;
