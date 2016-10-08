@@ -32,20 +32,10 @@ public class MainActivity extends AppCompatActivity implements ItemActionListene
     }
 
     private void initAdapter() {
-        mRecyclerAdapter = new SimpleRecyclerAdapter<>(this, new SimpleRecyclerAdapter.CreateViewHolder<MyDataViewHolder>() {
+        mRecyclerAdapter = new SimpleRecyclerAdapter<>(this, new SimpleRecyclerAdapter.CreateViewHolder<MyDataObject, MyDataViewHolder>() {
             @Override
-            public MyDataViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            public MyDataViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
                 return new MyDataViewHolder(MainActivity.this, R.layout.item_mydata, parent);
-            }
-
-            @Override
-            public int getItemId(int position) {
-                return mRecyclerAdapter.getItem(position).getId();
-            }
-
-            @Override
-            public int getItemViewType(int position) {
-                return 0;
             }
         });
         mRecyclerView.setAdapter(mRecyclerAdapter);

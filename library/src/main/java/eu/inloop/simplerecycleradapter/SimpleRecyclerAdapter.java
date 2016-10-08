@@ -10,27 +10,41 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends RecyclerView.Adapter<VH> {
 
-    public interface CreateViewHolder<VH> {
-        VH onCreateViewHolder(ViewGroup parent, int viewType);
+    @SuppressWarnings("WeakerAccess")
+    public static abstract class CreateViewHolder<T, VH> {
+        protected abstract VH onCreateViewHolder(final ViewGroup parent, final int viewType);
 
-        int getItemId(int position);
+        protected long getItemId(final T item, final int position) {
+            return RecyclerView.NO_ID;
+        }
 
-        int getItemViewType(int position);
+        protected int getItemViewType(final int position) {
+            return 0;
+        }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public interface ModifyViewHolder<T, VH> {
-        void modifyViewHolder(T item, VH viewHolder, int adapterPosition);
+        void modifyViewHolder(final T item, final VH viewHolder, final int adapterPosition);
     }
 
-    private List<T> mItems;
-    private ItemActionListener<T, VH> mActionListener;
-    private CreateViewHolder<VH> mCreateViewHolderListener;
+    @NonNull
+    private final List<T> mItems;
+
+    @Nullable
+    private final ItemActionListener<T, VH> mActionListener;
+
+    @NonNull
+    private final CreateViewHolder<T, VH> mCreateViewHolderListener;
+
+    @Nullable
     private ModifyViewHolder<T, VH> mModifyViewHolderListener;
 
-    public SimpleRecyclerAdapter(@Nullable ItemActionListener<T, VH> actionListener,
-                                 @NonNull CreateViewHolder<VH> createViewHolderListener) {
+    public SimpleRecyclerAdapter(final @Nullable ItemActionListener<T, VH> actionListener,
+                                 final @NonNull CreateViewHolder<T, VH> createViewHolderListener) {
         mItems = new ArrayList<>();
         mActionListener = actionListener;
         mCreateViewHolderListener = createViewHolderListener;
@@ -38,12 +52,12 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
     }
 
     @Override
-    public VH onCreateViewHolder(ViewGroup parent, int viewType) {
+    public VH onCreateViewHolder(final ViewGroup parent, final int viewType) {
         return mCreateViewHolderListener.onCreateViewHolder(parent, viewType);
     }
 
     @Override
-    public void onBindViewHolder(final VH holder, int position) {
+    public void onBindViewHolder(final VH holder, final int position) {
         final T item = mItems.get(position);
 
         holder.setData(item);
@@ -54,7 +68,7 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 if (mActionListener != null && holder.isClickable()) {
                     mActionListener.onItemClick(item, holder, -1);
                 }
@@ -62,44 +76,44 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
         });
     }
 
-    public void setModifyViewHolderListener(@Nullable ModifyViewHolder<T, VH> listener) {
+    public void setModifyViewHolderListener(final @Nullable ModifyViewHolder<T, VH> listener) {
         mModifyViewHolderListener = listener;
     }
 
     @Override
-    public long getItemId(int position) {
-        return mCreateViewHolderListener.getItemId(position);
+    public long getItemId(final int position) {
+        return mCreateViewHolderListener.getItemId(mItems.get(position), position);
     }
 
     @Override
-    public int getItemViewType(int position) {
+    public int getItemViewType(final int position) {
         return mCreateViewHolderListener.getItemViewType(position);
     }
 
-    public void addItem(T item) {
+    public void addItem(final T item) {
         mItems.add(item);
     }
 
-    public void addItem(int index, T item) {
+    public void addItem(final int index, final T item) {
         mItems.add(index, item);
     }
 
-    public void addItems(List<T> items) {
+    public void addItems(final List<T> items) {
         addItems(items, false);
     }
 
-    public void addItems(List<T> items, boolean notifyDataSetChanged) {
+    public void addItems(final List<T> items, final boolean notifyDataSetChanged) {
         mItems.addAll(items);
         if (notifyDataSetChanged) {
             notifyDataSetChanged();
         }
     }
 
-    public void removeItem(int index) {
+    public void removeItem(final int index) {
         mItems.remove(index);
     }
 
-    public int removeItemById(long id) {
+    public int removeItemById(final long id) {
         for (int i = 0; i < mItems.size(); i++) {
             if (getItemId(i) == id) {
                 mItems.remove(i);
@@ -113,17 +127,18 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
         clear(false);
     }
 
-    public void clear(boolean notifyDataSetChanged) {
+    public void clear(final boolean notifyDataSetChanged) {
         mItems.clear();
         if (notifyDataSetChanged) {
             notifyDataSetChanged();
         }
     }
 
-    public T getItem(int position) {
+    public T getItem(final int position) {
         return mItems.get(position);
     }
 
+    @NonNull
     public List<T> getItems() {
         return Collections.unmodifiableList(mItems);
     }
