@@ -1,4 +1,4 @@
-package eu.inloop.simplerecycleradapter.sample.adapter.viewholder;
+package eu.inloop.simplerecycleradapter.sample.adapter.viewholder.basic;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;

@@ -1,13 +1,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root_content"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".activity.MainActivity">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/root_content"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context=".activity.BasicAdapterActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_basic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Basic"/>
+
+        <Button
+            android:id="@+id/btn_advanced"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Advanced"/>
+
+    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
+        android:background="@android:color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 </LinearLayout>
