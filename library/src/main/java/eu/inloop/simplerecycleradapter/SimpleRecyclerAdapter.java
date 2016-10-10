@@ -146,18 +146,19 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
     }
 
     public void addItems(final List<T> items) {
-        addItems(items, false);
+        mItems.addAll(items);
     }
 
-    public void addItems(final List<T> items, final boolean notifyDataSetChanged) {
-        mItems.addAll(items);
-        if (notifyDataSetChanged) {
-            notifyDataSetChanged();
-        }
+    public void addItems(final int index, final List<T> items) {
+        mItems.addAll(index, items);
     }
 
     public void removeItem(final int index) {
         mItems.remove(index);
+    }
+
+    public void removeItem(final T object) {
+        mItems.remove(object);
     }
 
     public int removeItemById(final long id) {
@@ -170,15 +171,21 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
         return -1;
     }
 
-    public void clear() {
-        clear(false);
+    public boolean hasItemWithId(final long id) {
+        for (int i = 0; i < mItems.size(); i++) {
+            if (getItemId(i) == id) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public void clear(final boolean notifyDataSetChanged) {
+    public void clear() {
         mItems.clear();
-        if (notifyDataSetChanged) {
-            notifyDataSetChanged();
-        }
+    }
+
+    public boolean isEmpty() {
+        return mItems.isEmpty();
     }
 
     public T getItem(final int position) {
