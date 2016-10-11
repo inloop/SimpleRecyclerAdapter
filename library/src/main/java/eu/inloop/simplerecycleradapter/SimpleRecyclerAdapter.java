@@ -24,11 +24,9 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
         protected int getItemViewType(final int position) {
             return 0;
         }
-    }
 
-    @SuppressWarnings("WeakerAccess")
-    public interface ModifyViewHolder<T, VH> {
-        void modifyViewHolder(final T item, final VH viewHolder, final int adapterPosition);
+        protected void modifyViewHolder(final T item, final VH viewHolder, final int adapterPosition) {
+        }
     }
 
     @NonNull
@@ -39,9 +37,6 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
 
     @NonNull
     private final CreateViewHolder<T, VH> mCreateViewHolderListener;
-
-    @Nullable
-    private ModifyViewHolder<T, VH> mModifyViewHolderListener;
 
     public SimpleRecyclerAdapter(final @Nullable ItemActionListener<T, VH> actionListener,
                                  final @NonNull CreateViewHolder<T, VH> createViewHolderListener) {
@@ -68,9 +63,7 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
 
         holder.setData(item);
 
-        if (mModifyViewHolderListener != null) {
-            mModifyViewHolderListener.modifyViewHolder(item, holder, position);
-        }
+        mCreateViewHolderListener.modifyViewHolder(item, holder, position);
 
         if (mActionListener != null) {
             if (holder.isClickable()) {
@@ -122,10 +115,6 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
             }
         }
     };
-
-    public void setModifyViewHolderListener(final @Nullable ModifyViewHolder<T, VH> listener) {
-        mModifyViewHolderListener = listener;
-    }
 
     @Override
     public long getItemId(final int position) {
