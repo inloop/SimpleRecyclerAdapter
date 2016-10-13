@@ -44,6 +44,7 @@ public class BasicAdapterActivity extends AppCompatActivity implements ItemActio
 
     private void initAdapter() {
         mRecyclerAdapter = new SimpleRecyclerAdapter<>(this, new SimpleRecyclerAdapter.CreateViewHolder<MyDataObject, MyDataViewHolder>() {
+            @NonNull
             @Override
             public MyDataViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
                 return new MyDataViewHolder(BasicAdapterActivity.this, R.layout.item_mydata, parent);
