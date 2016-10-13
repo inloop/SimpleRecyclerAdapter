@@ -1,5 +1,6 @@
 package eu.inloop.simplerecycleradapter;
 
+import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
@@ -15,9 +17,10 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
 
     @SuppressWarnings("WeakerAccess")
     public static abstract class CreateViewHolder<T, VH> {
+        @NonNull
         protected abstract VH onCreateViewHolder(final ViewGroup parent, final int viewType);
 
-        protected long getItemId(final T item, final int position) {
+        protected long getItemId(@NonNull final T item, final int position) {
             return RecyclerView.NO_ID;
         }
 
@@ -25,7 +28,7 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
             return 0;
         }
 
-        protected void modifyViewHolder(final T item, final VH viewHolder, final int adapterPosition) {
+        protected void modifyViewHolder(final T item, @NonNull final VH viewHolder, final int adapterPosition) {
         }
     }
 
@@ -58,7 +61,7 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
     }
 
     @Override
-    public void onBindViewHolder(final VH holder, final int position) {
+    public void onBindViewHolder(@NonNull final VH holder, final int position) {
         final T item = mItems.get(position);
 
         holder.setData(item);
@@ -126,48 +129,107 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
         return mCreateViewHolderListener.getItemViewType(position);
     }
 
-    public void addItem(final T item) {
+    public void addItem(@NonNull final T item) {
+        addItem(item, false);
+    }
+
+    public void addItem(@NonNull final T item, boolean notifyInserted) {
         mItems.add(item);
+        if (notifyInserted) notifyItemInserted(mItems.size() - 1);
     }
 
-    public void addItem(final int index, final T item) {
+    public void addItem(@IntRange(from = 0) final int index, @NonNull final T item) {
+        addItem(index, item, false);
+    }
+
+    public void addItem(@IntRange(from = 0) final int index, @NonNull final T item, boolean notifyInserted) {
         mItems.add(index, item);
+        if (notifyInserted) notifyItemInserted(index);
     }
 
-    public void addItems(final List<T> items) {
+    public void addItems(@NonNull final List<T> items) {
+        addItems(items, false);
+    }
+
+    public void addItems(@NonNull final List<T> items, boolean notifyInserted) {
         mItems.addAll(items);
+        if (notifyInserted) notifyItemRangeInserted(mItems.size() - items.size() - 1, items.size());
     }
 
-    public void addItems(final int index, final List<T> items) {
+    public void addItems(@IntRange(from = 0) final int index, @NonNull final List<T> items) {
+        addItems(index, items, false);
+    }
+
+    public void addItems(@IntRange(from = 0) final int index, @NonNull final List<T> items, boolean notifyInserted) {
         mItems.addAll(index, items);
+        if (notifyInserted) notifyItemRangeInserted(index, items.size());
     }
 
     public void swapItem(final int firstIndex, final int secondIndex) {
+        swapItem(firstIndex, secondIndex, false);
+    }
+
+    public void swapItem(@IntRange(from = 0) final int firstIndex,
+                         @IntRange(from = 0) final int secondIndex, boolean notifyMoved) {
         Collections.swap(mItems, firstIndex, secondIndex);
+        if (notifyMoved) notifyItemMoved(firstIndex, secondIndex);
     }
-    
+
     @Nullable
-    public T replaceItem(final int index, final T item) {
-        return mItems.set(index, item);
+    public T replaceItem(@IntRange(from = 0) final int index, @NonNull final T item) {
+        return replaceItem(index, item, false);
     }
-    
-    public boolean replaceItems(final List<T> items) {
+
+    @Nullable
+    public T replaceItem(@IntRange(from = 0) final int index, @NonNull final T item, boolean notifyChanged) {
+        T prevItem = mItems.set(index, item);
+        if (notifyChanged) notifyItemChanged(index);
+        return prevItem;
+    }
+
+    public boolean replaceItems(@NonNull final List<T> items) {
+        return replaceItems(items, false);
+    }
+
+    public boolean replaceItems(@NonNull final List<T> items, boolean notifyDataSetChanged) {
         mItems.clear();
-        return mItems.addAll(items);
+        boolean added = mItems.addAll(items);
+        if (notifyDataSetChanged) notifyDataSetChanged();
+        return added;
     }
 
     public void removeItem(final int index) {
-        mItems.remove(index);
+        removeItem(index, false);
     }
 
-    public void removeItem(final T object) {
-        mItems.remove(object);
+    @NonNull
+    public T removeItem(@IntRange(from = 0) final int index, boolean notifyRemoved) {
+        T removedItem = mItems.remove(index);
+        if (notifyRemoved) notifyItemRemoved(index);
+        return removedItem;
+    }
+
+    public void removeItem(@NonNull final T object) {
+        removeItem(object, false);
+    }
+
+    public int removeItem(@NonNull final T object, boolean notifyRemoved) {
+        int itemIndex = mItems.indexOf(object);
+        if (itemIndex != -1) {
+            mItems.remove(itemIndex);
+            if (notifyRemoved) notifyItemRemoved(itemIndex);
+        }
+        return itemIndex;
     }
 
     public int removeItemById(final long id) {
+        return removeItemById(id, false);
+    }
+
+    public int removeItemById(final long id, boolean notifyRemoved) {
         for (int i = 0; i < mItems.size(); i++) {
             if (getItemId(i) == id) {
-                removeItem(i);
+                removeItem(i, notifyRemoved);
                 return i;
             }
         }
@@ -184,14 +246,20 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
     }
 
     public void clear() {
+        clear(false);
+    }
+
+    public void clear(boolean notifyDataSetChanged) {
         mItems.clear();
+        if (notifyDataSetChanged) notifyDataSetChanged();
     }
 
     public boolean isEmpty() {
         return mItems.isEmpty();
     }
 
-    public T getItem(final int position) {
+    @NonNull
+    public T getItem(@IntRange(from = 0) final int position) {
         return mItems.get(position);
     }
 
@@ -201,11 +269,17 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
     }
 
     @Override
+    @IntRange(from = 0)
     public int getItemCount() {
         return mItems.size();
     }
-    
+
     public void sortItems(@NonNull final Comparator<T> comparator) {
+        sortItems(comparator, false);
+    }
+
+    public void sortItems(@NonNull final Comparator<T> comparator, boolean notifyDataSetChanged) {
         Collections.sort(mItems, comparator);
+        if (notifyDataSetChanged) notifyDataSetChanged();
     }
 }

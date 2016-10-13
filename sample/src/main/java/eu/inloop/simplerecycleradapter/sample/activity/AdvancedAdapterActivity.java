@@ -49,6 +49,7 @@ public class AdvancedAdapterActivity extends AppCompatActivity implements ItemAc
     private void initAdapter() {
         mRecyclerAdapter = new SimpleRecyclerAdapter<>(this,
                 new SimpleRecyclerAdapter.CreateViewHolder<WrappedMyDataObject, SettableViewHolder>() {
+                    @NonNull
                     @Override
                     protected SettableViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                         switch (viewType) {
