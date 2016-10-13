@@ -142,6 +142,15 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
         mItems.addAll(index, items);
     }
 
+    public void swapItem(final int firstIndex, final int secondIndex) {
+        Collections.swap(mItems, firstIndex, secondIndex);
+    }
+    
+    @Nullable
+    public T replaceItem(final int index, final T item) {
+        return mItems.set(index, item);
+    }
+
     public void removeItem(final int index) {
         mItems.remove(index);
     }
@@ -153,7 +162,7 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
     public int removeItemById(final long id) {
         for (int i = 0; i < mItems.size(); i++) {
             if (getItemId(i) == id) {
-                mItems.remove(i);
+                removeItem(i);
                 return i;
             }
         }
