@@ -150,6 +150,11 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
     public T replaceItem(final int index, final T item) {
         return mItems.set(index, item);
     }
+    
+    public boolean replaceItems(final List<T> items) {
+        mItems.clear();
+        return mItems.addAll(items);
+    }
 
     public void removeItem(final int index) {
         mItems.remove(index);
