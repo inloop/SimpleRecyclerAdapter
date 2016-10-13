@@ -36,6 +36,17 @@ public class AdvancedAdapterActivity extends AppCompatActivity implements ItemAc
                 startActivity(new Intent(AdvancedAdapterActivity.this, BasicAdapterActivity.class));
             }
         });
+        View btnAdd = findViewById(R.id.btn_add);
+        btnAdd.setVisibility(View.VISIBLE);
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            int counter = 1;
+            @Override
+            public void onClick(View v) {
+                MyDataObject dataObject = new MyDataObject("New", "Text " + counter);
+                mRecyclerAdapter.addItem(WrappedMyDataObject.initDataItem(dataObject), true);
+                counter++;
+            }
+        });
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -84,11 +95,26 @@ public class AdvancedAdapterActivity extends AppCompatActivity implements ItemAc
     public void onItemClick(@NonNull WrappedMyDataObject item, @NonNull SettableViewHolder viewHolder, @NonNull View view) {
         if (item.getType() == WrappedMyDataObject.ITEM_TYPE_NORMAL) {
             MyDataObject dataObject = item.getDataObject();
+            int itemPos = viewHolder.getAdapterPosition();
 
-            if (view.getId() == R.id.btn_more) {
-                setTitle("Action clicked on item: " + dataObject.getTitle());
-            } else {
-                setTitle("Last clicked item: " + dataObject.getTitle());
+            switch (view.getId()) {
+                case R.id.btn_more:
+                    setTitle("Action clicked on item: " + dataObject.getTitle());
+                    break;
+                case R.id.btn_remove:
+                    mRecyclerAdapter.removeItem(item, true);
+                    break;
+                case R.id.btn_move_up:
+                    mRecyclerAdapter.swapItem(itemPos, Math.max(0, itemPos - 1), true);
+                    break;
+                case R.id.btn_move_down:
+                    int maxIndex = mRecyclerAdapter.getItemCount() - 1;
+                    mRecyclerAdapter.swapItem(itemPos, Math.min(maxIndex, itemPos + 1), true);
+                    break;
+                default:
+                    //Actual item click
+                    setTitle("Last clicked item: " + dataObject.getTitle());
+                    break;
             }
         }
     }

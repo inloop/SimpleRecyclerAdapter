@@ -23,6 +23,13 @@
             android:layout_height="wrap_content"
             android:text="Advanced"/>
 
+        <Button
+            android:id="@+id/btn_add"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add item"/>
+
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView

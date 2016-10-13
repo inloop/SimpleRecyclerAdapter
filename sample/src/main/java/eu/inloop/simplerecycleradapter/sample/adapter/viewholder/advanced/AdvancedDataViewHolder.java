@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 import eu.inloop.simplerecycleradapter.SettableViewHolder;
@@ -22,7 +22,8 @@ public class AdvancedDataViewHolder extends SettableViewHolder<WrappedMyDataObje
 
     private TextView mTitle;
     private TextView mText;
-    private Button mBtnMore;
+    private ViewGroup mActions;
+    private Button mBtnMore, mBtnRemove, mBtnUp, mBtnDown;
 
     public AdvancedDataViewHolder(View itemView) {
         super(itemView);
@@ -38,7 +39,11 @@ public class AdvancedDataViewHolder extends SettableViewHolder<WrappedMyDataObje
         mTitle = (TextView) itemView.findViewById(R.id.title);
         mText = (TextView) itemView.findViewById(R.id.description);
         mBtnMore = (Button) itemView.findViewById(R.id.btn_more);
-        mBtnMore.setVisibility(View.VISIBLE);
+        mBtnRemove = (Button) itemView.findViewById(R.id.btn_remove);
+        mBtnUp = (Button) itemView.findViewById(R.id.btn_move_up);
+        mBtnDown = (Button) itemView.findViewById(R.id.btn_move_down);
+        mActions = (ViewGroup) itemView.findViewById(R.id.actions);
+        mActions.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -51,6 +56,6 @@ public class AdvancedDataViewHolder extends SettableViewHolder<WrappedMyDataObje
     @Nullable
     @Override
     public List<? extends View> getInnerClickableAreas() {
-        return Collections.singletonList(mBtnMore);
+        return Arrays.asList(mBtnUp, mBtnDown, mBtnRemove, mBtnMore);
     }
 }

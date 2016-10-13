@@ -12,26 +12,58 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical">
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        tools:text="Title"/>
 
-    <TextView
-        android:id="@+id/description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="Text"/>
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            tools:text="Title"/>
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Text"/>
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_more"
+    <LinearLayout
+        android:id="@+id/actions"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:text="More"
-        android:visibility="gone"
-        style="@style/Widget.AppCompat.Button.Borderless"/>
+        android:orientation="horizontal"
+        android:visibility="gone">
 
+        <Button
+            android:id="@+id/btn_move_up"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:minWidth="0dp"
+            android:text="Up"/>
+
+        <Button
+            android:id="@+id/btn_move_down"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:minWidth="0dp"
+            android:text="Down"/>
+
+        <Button
+            android:id="@+id/btn_remove"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:minWidth="0dp"
+            android:text="Remove"/>
+
+        <Button
+            android:id="@+id/btn_more"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:minWidth="0dp"
+            android:text="More"/>
+    </LinearLayout>
 </LinearLayout>
