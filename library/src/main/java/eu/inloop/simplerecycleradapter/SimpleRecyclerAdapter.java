@@ -199,4 +199,8 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
     public int getItemCount() {
         return mItems.size();
     }
+    
+    public void sortItems(@NonNull final Comparator<T> comparator) {
+        Collections.sort(mItems, comparator);
+    }
 }
