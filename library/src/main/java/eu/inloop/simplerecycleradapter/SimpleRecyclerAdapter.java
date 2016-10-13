@@ -28,7 +28,7 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
             return 0;
         }
 
-        protected void modifyViewHolder(final T item, @NonNull final VH viewHolder, final int adapterPosition) {
+        protected void modifyViewHolder(@NonNull final T item, @NonNull final VH viewHolder, final int adapterPosition) {
         }
     }
 
@@ -120,12 +120,12 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
     };
 
     @Override
-    public long getItemId(final int position) {
+    public long getItemId(@IntRange(from = 0) final int position) {
         return mCreateViewHolderListener.getItemId(mItems.get(position), position);
     }
 
     @Override
-    public int getItemViewType(final int position) {
+    public int getItemViewType(@IntRange(from = 0) final int position) {
         return mCreateViewHolderListener.getItemViewType(position);
     }
 
@@ -165,7 +165,7 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
         if (notifyInserted) notifyItemRangeInserted(index, items.size());
     }
 
-    public void swapItem(final int firstIndex, final int secondIndex) {
+    public void swapItem(@IntRange(from = 0) final int firstIndex, @IntRange(from = 0) final int secondIndex) {
         swapItem(firstIndex, secondIndex, false);
     }
 
@@ -198,7 +198,7 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
         return added;
     }
 
-    public void removeItem(final int index) {
+    public void removeItem(@IntRange(from = 0) final int index) {
         removeItem(index, false);
     }
 

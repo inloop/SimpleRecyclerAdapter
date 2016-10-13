@@ -24,7 +24,7 @@ public abstract class SettableViewHolder<R> extends RecyclerView.ViewHolder {
         super(LayoutInflater.from(context).inflate(layoutRes, parent, false));
     }
 
-    public abstract void setData(R data);
+    public abstract void setData(@NonNull R data);
 
     public boolean isClickable() {
         return true;

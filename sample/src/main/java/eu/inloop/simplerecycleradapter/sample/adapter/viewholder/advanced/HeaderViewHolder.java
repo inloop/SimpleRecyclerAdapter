@@ -31,7 +31,7 @@ public class HeaderViewHolder extends SettableViewHolder<WrappedMyDataObject> {
     }
 
     @Override
-    public void setData(WrappedMyDataObject data) {
+    public void setData(@NonNull WrappedMyDataObject data) {
         mTitle.setText(data.getHeaderTitle());
     }
 

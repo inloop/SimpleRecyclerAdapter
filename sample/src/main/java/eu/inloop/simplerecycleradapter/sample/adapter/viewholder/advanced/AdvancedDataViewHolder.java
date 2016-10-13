@@ -47,7 +47,7 @@ public class AdvancedDataViewHolder extends SettableViewHolder<WrappedMyDataObje
     }
 
     @Override
-    public void setData(WrappedMyDataObject data) {
+    public void setData(@NonNull WrappedMyDataObject data) {
         MyDataObject dataObject = data.getDataObject();
         mTitle.setText(dataObject.getTitle());
         mText.setText(dataObject.getText());
