@@ -9,7 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import eu.inloop.simplerecycleradapter.ItemActionListener;
+import eu.inloop.simplerecycleradapter.ItemClickListener;
+import eu.inloop.simplerecycleradapter.ItemLongClickListener;
 import eu.inloop.simplerecycleradapter.SettableViewHolder;
 import eu.inloop.simplerecycleradapter.SimpleRecyclerAdapter;
 import eu.inloop.simplerecycleradapter.sample.R;
@@ -18,10 +19,10 @@ import eu.inloop.simplerecycleradapter.sample.adapter.model.WrappedMyDataObject;
 import eu.inloop.simplerecycleradapter.sample.adapter.viewholder.advanced.AdvancedDataViewHolder;
 import eu.inloop.simplerecycleradapter.sample.adapter.viewholder.advanced.HeaderViewHolder;
 
-public class AdvancedAdapterActivity extends AppCompatActivity implements ItemActionListener<WrappedMyDataObject, SettableViewHolder> {
+public class AdvancedAdapterActivity extends AppCompatActivity implements ItemClickListener<WrappedMyDataObject>, ItemLongClickListener<WrappedMyDataObject> {
 
     private RecyclerView mRecyclerView;
-    private SimpleRecyclerAdapter<WrappedMyDataObject, ? extends SettableViewHolder> mRecyclerAdapter;
+    private SimpleRecyclerAdapter<WrappedMyDataObject> mRecyclerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,10 +60,10 @@ public class AdvancedAdapterActivity extends AppCompatActivity implements ItemAc
     @SuppressWarnings("unchecked")
     private void initAdapter() {
         mRecyclerAdapter = new SimpleRecyclerAdapter<>(this,
-                new SimpleRecyclerAdapter.CreateViewHolder<WrappedMyDataObject, SettableViewHolder>() {
+                new SimpleRecyclerAdapter.CreateViewHolder<WrappedMyDataObject>() {
                     @NonNull
                     @Override
-                    protected SettableViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                    protected SettableViewHolder<WrappedMyDataObject> onCreateViewHolder(ViewGroup parent, int viewType) {
                         switch (viewType) {
                             case WrappedMyDataObject.ITEM_TYPE_NORMAL:
                                 return new AdvancedDataViewHolder(AdvancedAdapterActivity.this, R.layout.item_mydata, parent);
@@ -78,6 +79,7 @@ public class AdvancedAdapterActivity extends AppCompatActivity implements ItemAc
                         return mRecyclerAdapter.getItem(position).getType();
                     }
                 });
+        mRecyclerAdapter.setLongClickListener(AdvancedAdapterActivity.this);
         mRecyclerView.setAdapter(mRecyclerAdapter);
     }
 
@@ -92,7 +94,7 @@ public class AdvancedAdapterActivity extends AppCompatActivity implements ItemAc
     }
 
     @Override
-    public void onItemClick(@NonNull WrappedMyDataObject item, @NonNull SettableViewHolder viewHolder, @NonNull View view) {
+    public void onItemClick(@NonNull WrappedMyDataObject item, @NonNull SettableViewHolder<WrappedMyDataObject> viewHolder, @NonNull View view) {
         if (item.getType() == WrappedMyDataObject.ITEM_TYPE_NORMAL) {
             MyDataObject dataObject = item.getDataObject();
             int itemPos = viewHolder.getAdapterPosition();
@@ -117,5 +119,19 @@ public class AdvancedAdapterActivity extends AppCompatActivity implements ItemAc
                     break;
             }
         }
+    }
+
+    @Override
+    public boolean onItemLongClick(@NonNull WrappedMyDataObject item, @NonNull SettableViewHolder<WrappedMyDataObject> viewHolder, @NonNull View view) {
+        if (item.getType() == WrappedMyDataObject.ITEM_TYPE_NORMAL) {
+            MyDataObject dataObject = item.getDataObject();
+
+            if (view.getId() == -1) {
+                setTitle("Action LONG clicked on item: " + dataObject.getTitle());
+                return true;
+            }
+
+        }
+        return false;
     }
 }

@@ -10,9 +10,9 @@ How to implement
 Very easy, to create a new RecyclerViewAdapter, you only need to make an instance of our SimpleRecyclerAdapter:
 
 ```java
-mRecyclerAdapter = new SimpleRecyclerAdapter<>(mOnClickListener, new SimpleRecyclerAdapter.CreateViewHolder<MyDataObject, MyDataViewHolder>() {
+mRecyclerAdapter = new SimpleRecyclerAdapter<>(mOnClickListener, new SimpleRecyclerAdapter.CreateViewHolder<MyDataObject>() {
         @Override
-        public MyDataViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
+        public SettableViewHolder<MyDataObject> onCreateViewHolder(final ViewGroup parent, final int viewType) {
             return new MyDataViewHolder(BasicAdapterActivity.this, R.layout.item_mydata, parent);
         }
 });
