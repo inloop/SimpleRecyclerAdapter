@@ -1,3 +1,9 @@
+## 0.3.0(2016-10-14)
+
+- Remove complicated generic types ([8c11e69](https://github.com/inloop/SimpleRecyclerAdapter/commit/8c11e6960d3ce076184c7a5028876d3105834b35))
+- Add long-press support ([8c11e69](https://github.com/inloop/SimpleRecyclerAdapter/commit/8c11e6960d3ce076184c7a5028876d3105834b35))
+- Add return value to removeItem methods ([cefd5c1](https://github.com/inloop/SimpleRecyclerAdapter/commit/cefd5c1ff6d538c90535b1f2f3480b03a5177108))
+
 ## 0.2.1(2016-10-13)
 
 - Add sortItems method ([d297639](https://github.com/inloop/SimpleRecyclerAdapter/commit/d2976391296965f6706946806d67ea25eee7749c))
