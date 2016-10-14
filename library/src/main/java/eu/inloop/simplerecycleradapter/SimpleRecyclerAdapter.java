@@ -69,7 +69,7 @@ public class SimpleRecyclerAdapter<T> extends RecyclerView.Adapter<SettableViewH
     }
 
     public void setLongClickListener(@Nullable ItemLongClickListener<T> longClickListener) {
-        if (mLongClickListener != null && mBindViewLongClickListener == null) {
+        if (longClickListener != null && mBindViewLongClickListener == null) {
             mBindViewLongClickListener = new OnItemLongClickListener();
         }
         this.mLongClickListener = longClickListener;
