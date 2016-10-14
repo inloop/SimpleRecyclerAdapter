@@ -143,7 +143,9 @@ public class SimpleRecyclerAdapter<T> extends RecyclerView.Adapter<SettableViewH
             if (mClickListener != null) {
                 @SuppressWarnings("unchecked")
                 final TagWrapper<T> tagWrapper = (TagWrapper<T>) view.getTag();
-                mClickListener.onItemClick(tagWrapper.item, tagWrapper.viewholder, view);
+                if (tagWrapper.viewholder.getAdapterPosition() != RecyclerView.NO_POSITION) {
+                    mClickListener.onItemClick(tagWrapper.item, tagWrapper.viewholder, view);
+                }
             }
         }
     }
@@ -155,7 +157,9 @@ public class SimpleRecyclerAdapter<T> extends RecyclerView.Adapter<SettableViewH
             if (mLongClickListener != null) {
                 @SuppressWarnings("unchecked")
                 final TagWrapper<T> tagWrapper = (TagWrapper<T>) view.getTag();
-                return mLongClickListener.onItemLongClick(tagWrapper.item, tagWrapper.viewholder, view);
+                if (tagWrapper.viewholder.getAdapterPosition() != RecyclerView.NO_POSITION) {
+                    return mLongClickListener.onItemLongClick(tagWrapper.item, tagWrapper.viewholder, view);
+                }
             }
             return false;
         }
