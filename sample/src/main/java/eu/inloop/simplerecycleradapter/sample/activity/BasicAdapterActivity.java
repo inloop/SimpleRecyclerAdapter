@@ -9,16 +9,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import eu.inloop.simplerecycleradapter.ItemActionListener;
+import eu.inloop.simplerecycleradapter.ItemClickListener;
+import eu.inloop.simplerecycleradapter.SettableViewHolder;
 import eu.inloop.simplerecycleradapter.SimpleRecyclerAdapter;
 import eu.inloop.simplerecycleradapter.sample.R;
 import eu.inloop.simplerecycleradapter.sample.adapter.model.MyDataObject;
 import eu.inloop.simplerecycleradapter.sample.adapter.viewholder.basic.MyDataViewHolder;
 
-public class BasicAdapterActivity extends AppCompatActivity implements ItemActionListener<MyDataObject, MyDataViewHolder> {
+public class BasicAdapterActivity extends AppCompatActivity implements ItemClickListener<MyDataObject> {
 
     private RecyclerView mRecyclerView;
-    private SimpleRecyclerAdapter<MyDataObject, MyDataViewHolder> mRecyclerAdapter;
+    private SimpleRecyclerAdapter<MyDataObject> mRecyclerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,7 @@ public class BasicAdapterActivity extends AppCompatActivity implements ItemActio
     }
 
     private void initAdapter() {
-        mRecyclerAdapter = new SimpleRecyclerAdapter<>(this, new SimpleRecyclerAdapter.CreateViewHolder<MyDataObject, MyDataViewHolder>() {
+        mRecyclerAdapter = new SimpleRecyclerAdapter<>(this, new SimpleRecyclerAdapter.CreateViewHolder<MyDataObject>() {
             @NonNull
             @Override
             public MyDataViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
@@ -61,7 +62,7 @@ public class BasicAdapterActivity extends AppCompatActivity implements ItemActio
     }
 
     @Override
-    public void onItemClick(@NonNull MyDataObject item, @NonNull MyDataViewHolder viewHolder, @NonNull View view) {
+    public void onItemClick(@NonNull MyDataObject item, @NonNull SettableViewHolder<MyDataObject> viewHolder, @NonNull View view) {
         setTitle("Last clicked item: " + item.getTitle());
     }
 }

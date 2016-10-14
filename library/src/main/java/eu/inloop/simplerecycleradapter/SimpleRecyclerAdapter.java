@@ -13,12 +13,11 @@ import java.util.Comparator;
 import java.util.List;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
-public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends RecyclerView.Adapter<VH> {
+public class SimpleRecyclerAdapter<T> extends RecyclerView.Adapter<SettableViewHolder<T>> {
 
-    @SuppressWarnings("WeakerAccess")
-    public static abstract class CreateViewHolder<T, VH> {
+    public static abstract class CreateViewHolder<T> {
         @NonNull
-        protected abstract VH onCreateViewHolder(final ViewGroup parent, final int viewType);
+        protected abstract SettableViewHolder<T> onCreateViewHolder(final ViewGroup parent, final int viewType);
 
         protected long getItemId(@NonNull final T item, final int position) {
             return RecyclerView.NO_ID;
@@ -28,7 +27,7 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
             return 0;
         }
 
-        protected void modifyViewHolder(@NonNull final T item, @NonNull final VH viewHolder, final int adapterPosition) {
+        protected void modifyViewHolder(@NonNull final T item, @NonNull final SettableViewHolder<T> viewHolder, final int adapterPosition) {
         }
     }
 
@@ -36,43 +35,65 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
     private final List<T> mItems;
 
     @Nullable
-    private final ItemActionListener<T, VH> mActionListener;
+    private final OnItemClickListener mBindViewClickListener;
+
+    @Nullable
+    private OnItemLongClickListener mBindViewLongClickListener;
+
+    @Nullable
+    private final ItemClickListener<T> mClickListener;
+
+    @Nullable
+    private ItemLongClickListener<T> mLongClickListener;
 
     @NonNull
-    private final CreateViewHolder<T, VH> mCreateViewHolderListener;
+    private final CreateViewHolder<T> mCreateViewHolderListener;
 
-    public SimpleRecyclerAdapter(final @Nullable ItemActionListener<T, VH> actionListener,
-                                 final @NonNull CreateViewHolder<T, VH> createViewHolderListener) {
-        this(actionListener, createViewHolderListener, false);
+    public SimpleRecyclerAdapter(final @Nullable ItemClickListener<T> onClickListener,
+                                 final @NonNull CreateViewHolder<T> createViewHolderListener) {
+        this(onClickListener, createViewHolderListener, false);
     }
 
-    public SimpleRecyclerAdapter(final @Nullable ItemActionListener<T, VH> actionListener,
-                                 final @NonNull CreateViewHolder<T, VH> createViewHolderListener,
+    public SimpleRecyclerAdapter(final @Nullable ItemClickListener<T> onClickListener,
+                                 final @NonNull CreateViewHolder<T> createViewHolderListener,
                                  final boolean hasStableIds) {
         mItems = new ArrayList<>();
-        mActionListener = actionListener;
+        mClickListener = onClickListener;
         mCreateViewHolderListener = createViewHolderListener;
+        if (onClickListener != null) {
+            mBindViewClickListener = new OnItemClickListener();
+        } else {
+            mBindViewClickListener = null;
+        }
         setHasStableIds(hasStableIds);
     }
 
+    public void setLongClickListener(@Nullable ItemLongClickListener<T> longClickListener) {
+        if (mLongClickListener != null && mBindViewLongClickListener == null) {
+            mBindViewLongClickListener = new OnItemLongClickListener();
+        }
+        this.mLongClickListener = longClickListener;
+    }
+
     @Override
-    public VH onCreateViewHolder(final ViewGroup parent, final int viewType) {
+    public SettableViewHolder<T> onCreateViewHolder(final ViewGroup parent, final int viewType) {
         return mCreateViewHolderListener.onCreateViewHolder(parent, viewType);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final VH holder, final int position) {
+    public void onBindViewHolder(@NonNull final SettableViewHolder<T> holder, final int position) {
         final T item = mItems.get(position);
 
         holder.setData(item);
 
         mCreateViewHolderListener.modifyViewHolder(item, holder, position);
 
-        if (mActionListener != null) {
+        if (mClickListener != null || mLongClickListener != null) {
             if (holder.isClickable()) {
                 setClickListener(holder.itemView, item, holder);
             } else {
                 holder.itemView.setOnClickListener(null);
+                holder.itemView.setOnLongClickListener(null);
             }
 
             final List<? extends View> clickableAreas = holder.getCachedClickableAreas();
@@ -84,9 +105,9 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
         }
     }
 
-    private void setClickListener(@NonNull final View view, @NonNull final T item, @NonNull final VH holder) {
+    private void setClickListener(@NonNull final View view, @NonNull final T item, @NonNull final SettableViewHolder<T> holder) {
         @SuppressWarnings("unchecked")
-        TagWrapper<T,VH> tagWrapper = (TagWrapper<T, VH>) view.getTag();
+        TagWrapper<T> tagWrapper = (TagWrapper<T>) view.getTag();
         if (tagWrapper == null) {
             tagWrapper = new TagWrapper<>(item, holder);
         } else {
@@ -94,30 +115,51 @@ public class SimpleRecyclerAdapter<T, VH extends SettableViewHolder<T>> extends 
             tagWrapper.viewholder = holder;
         }
         view.setTag(tagWrapper);
-        view.setOnClickListener(mOnClickListener);
+
+        // Only set a listener if someone is actually listening
+        if (mClickListener != null) {
+            view.setOnClickListener(mBindViewClickListener);
+        }
+
+        if (mLongClickListener != null) {
+            view.setOnLongClickListener(mBindViewLongClickListener);
+        }
     }
 
-    private static class TagWrapper <T, VH> {
+    private static class TagWrapper <T> {
         T item;
-        VH viewholder;
+        SettableViewHolder<T> viewholder;
 
-        public TagWrapper(T item, VH viewholder) {
+        public TagWrapper(T item, SettableViewHolder<T>  viewholder) {
             this.item = item;
             this.viewholder = viewholder;
         }
     }
 
-    @NonNull
-    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
+    private final class OnItemClickListener implements View.OnClickListener {
+
         @Override
         public void onClick(final View view) {
-            if (mActionListener != null) {
+            if (mClickListener != null) {
                 @SuppressWarnings("unchecked")
-                final TagWrapper<T, VH> tagWrapper = (TagWrapper<T, VH>) view.getTag();
-                mActionListener.onItemClick(tagWrapper.item, tagWrapper.viewholder, view);
+                final TagWrapper<T> tagWrapper = (TagWrapper<T>) view.getTag();
+                mClickListener.onItemClick(tagWrapper.item, tagWrapper.viewholder, view);
             }
         }
-    };
+    }
+
+    private final class OnItemLongClickListener implements View.OnLongClickListener {
+
+        @Override
+        public boolean onLongClick(View view) {
+            if (mLongClickListener != null) {
+                @SuppressWarnings("unchecked")
+                final TagWrapper<T> tagWrapper = (TagWrapper<T>) view.getTag();
+                return mLongClickListener.onItemLongClick(tagWrapper.item, tagWrapper.viewholder, view);
+            }
+            return false;
+        }
+    }
 
     @Override
     public long getItemId(@IntRange(from = 0) final int position) {
