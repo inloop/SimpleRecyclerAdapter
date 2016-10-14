@@ -240,8 +240,9 @@ public class SimpleRecyclerAdapter<T> extends RecyclerView.Adapter<SettableViewH
         return added;
     }
 
-    public void removeItem(@IntRange(from = 0) final int index) {
-        removeItem(index, false);
+    @NonNull
+    public T removeItem(@IntRange(from = 0) final int index) {
+        return removeItem(index, false);
     }
 
     @NonNull
@@ -251,8 +252,8 @@ public class SimpleRecyclerAdapter<T> extends RecyclerView.Adapter<SettableViewH
         return removedItem;
     }
 
-    public void removeItem(@NonNull final T object) {
-        removeItem(object, false);
+    public int removeItem(@NonNull final T object) {
+        return removeItem(object, false);
     }
 
     public int removeItem(@NonNull final T object, boolean notifyRemoved) {
