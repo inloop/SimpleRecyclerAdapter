@@ -51,13 +51,26 @@ public class SimpleRecyclerAdapter<T> extends RecyclerView.Adapter<SettableViewH
 
     public SimpleRecyclerAdapter(final @Nullable ItemClickListener<T> onClickListener,
                                  final @NonNull CreateViewHolder<T> createViewHolderListener) {
-        this(onClickListener, createViewHolderListener, false);
+        this(onClickListener, createViewHolderListener, false, Collections.<T>emptyList());
     }
 
     public SimpleRecyclerAdapter(final @Nullable ItemClickListener<T> onClickListener,
                                  final @NonNull CreateViewHolder<T> createViewHolderListener,
                                  final boolean hasStableIds) {
-        mItems = new ArrayList<>();
+        this(onClickListener, createViewHolderListener, hasStableIds, Collections.<T>emptyList());
+    }
+
+    public SimpleRecyclerAdapter(final @Nullable ItemClickListener<T> onClickListener,
+                                 final @NonNull CreateViewHolder<T> createViewHolderListener,
+                                 final @NonNull List<T> initialList) {
+        this(onClickListener, createViewHolderListener, false, initialList);
+    }
+
+    public SimpleRecyclerAdapter(final @Nullable ItemClickListener<T> onClickListener,
+                                 final @NonNull CreateViewHolder<T> createViewHolderListener,
+                                 final boolean hasStableIds,
+                                 final @NonNull List<T> initialList) {
+        mItems = new ArrayList<>(initialList);
         mClickListener = onClickListener;
         mCreateViewHolderListener = createViewHolderListener;
         if (onClickListener != null) {
