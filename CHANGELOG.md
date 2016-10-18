@@ -1,3 +1,8 @@
+## 0.3.1(2016-10-18)
+
+- Add constructor with items ([c652b9f](https://github.com/inloop/SimpleRecyclerAdapter/commit/c652b9fc36ae319e23aa9372a88e73234bc0e380))
+- Handle NO_POSITION on click ([b763e35](https://github.com/inloop/SimpleRecyclerAdapter/commit/b763e35346feebee48de68357a6eff5b702696e7))
+
 ## 0.3.0(2016-10-14)
 
 - Remove complicated generic types ([8c11e69](https://github.com/inloop/SimpleRecyclerAdapter/commit/8c11e6960d3ce076184c7a5028876d3105834b35))
