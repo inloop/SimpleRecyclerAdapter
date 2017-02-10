@@ -1,3 +1,7 @@
+## 0.3.2(2017-2-10)
+
+- Add replaceItemById, getItemById, getItemIndexById ([5452d1b](https://github.com/inloop/SimpleRecyclerAdapter/commit/5452d1b5c8ec771bc9905526c87b9da858ddca45))
+
 ## 0.3.1(2016-10-18)
 
 - Add constructor with items ([c652b9f](https://github.com/inloop/SimpleRecyclerAdapter/commit/c652b9fc36ae319e23aa9372a88e73234bc0e380))
