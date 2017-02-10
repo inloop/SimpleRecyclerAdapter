@@ -246,6 +246,18 @@ public class SimpleRecyclerAdapter<T> extends RecyclerView.Adapter<SettableViewH
         return prevItem;
     }
 
+    public int replaceItemById(final long id, @NonNull final T item) {
+        return replaceItemById(id, item, false);
+    }
+
+    public int replaceItemById(final long id, @NonNull final T item, boolean notifyChanged) {
+        int itemIndex = getItemIndexById(id);
+        if (itemIndex != -1) {
+            replaceItem(itemIndex, item, notifyChanged);
+        }
+        return itemIndex;
+    }
+
     public boolean replaceItems(@NonNull final List<T> items) {
         return replaceItems(items, false);
     }
@@ -297,12 +309,26 @@ public class SimpleRecyclerAdapter<T> extends RecyclerView.Adapter<SettableViewH
     }
 
     public boolean hasItemWithId(final long id) {
+        return getItemIndexById(id) != -1;
+    }
+
+    @Nullable
+    public T getItemById(final long id) {
+        int itemIndex = getItemIndexById(id);
+        if (itemIndex != -1) {
+            return mItems.get(itemIndex);
+        } else {
+            return null;
+        }
+    }
+
+    public int getItemIndexById(final long id) {
         for (int i = 0; i < mItems.size(); i++) {
             if (getItemId(i) == id) {
-                return true;
+                return i;
             }
         }
-        return false;
+        return -1;
     }
 
     public void clear() {
