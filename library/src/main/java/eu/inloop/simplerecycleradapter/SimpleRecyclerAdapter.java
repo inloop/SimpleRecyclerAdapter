@@ -23,7 +23,7 @@ public class SimpleRecyclerAdapter<T> extends RecyclerView.Adapter<SettableViewH
             return RecyclerView.NO_ID;
         }
 
-        protected int getItemViewType(final int position) {
+        protected int getItemViewType(@NonNull final T item, final int position) {
             return 0;
         }
 
@@ -185,7 +185,7 @@ public class SimpleRecyclerAdapter<T> extends RecyclerView.Adapter<SettableViewH
 
     @Override
     public int getItemViewType(@IntRange(from = 0) final int position) {
-        return mCreateViewHolderListener.getItemViewType(position);
+        return mCreateViewHolderListener.getItemViewType(mItems.get(position), position);
     }
 
     public void addItem(@NonNull final T item) {

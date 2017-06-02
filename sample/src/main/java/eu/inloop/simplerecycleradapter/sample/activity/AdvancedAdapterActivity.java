@@ -75,8 +75,8 @@ public class AdvancedAdapterActivity extends AppCompatActivity implements ItemCl
                     }
 
                     @Override
-                    protected int getItemViewType(int position) {
-                        return mRecyclerAdapter.getItem(position).getType();
+                    protected int getItemViewType(@NonNull WrappedMyDataObject item, int position) {
+                        return item.getType();
                     }
                 });
         mRecyclerAdapter.setLongClickListener(AdvancedAdapterActivity.this);
