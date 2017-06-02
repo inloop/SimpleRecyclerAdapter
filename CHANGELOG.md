@@ -1,3 +1,7 @@
+## 0.3.2(2017-6-2)
+
+- BREAKING CHANGE: Change getItemViewType method signature to include item ([7f95a75](https://github.com/inloop/SimpleRecyclerAdapter/commit/7f95a75cb88e47917eb02dc2619d97283b1ce351))
+
 ## 0.3.2(2017-2-10)
 
 - Add replaceItemById, getItemById, getItemIndexById ([5452d1b](https://github.com/inloop/SimpleRecyclerAdapter/commit/5452d1b5c8ec771bc9905526c87b9da858ddca45))
