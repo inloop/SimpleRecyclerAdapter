@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+@SuppressWarnings("WeakerAccess")
 public abstract class SettableViewHolder<R> extends RecyclerView.ViewHolder {
 
     @Nullable
@@ -32,12 +33,24 @@ public abstract class SettableViewHolder<R> extends RecyclerView.ViewHolder {
 
     @Nullable
     List<? extends View> getCachedClickableAreas() {
-        if (null != mClickableAreas) {
-            return mClickableAreas;
+        if (cacheInnerClickableAreas()) {
+            if (null != mClickableAreas) {
+                return mClickableAreas;
+            } else {
+                mClickableAreas = getInnerClickableAreas();
+                return mClickableAreas;
+            }
         } else {
-            mClickableAreas = getInnerClickableAreas();
-            return mClickableAreas;
+            return getInnerClickableAreas();
         }
+    }
+
+    /**
+     * Enable or disable caching of {@link SettableViewHolder#getInnerClickableAreas()}.
+     * When your ViewHolder contains dynamic inner clickable areas this method must return false.
+     */
+    public boolean cacheInnerClickableAreas() {
+        return true;
     }
 
     @Nullable
