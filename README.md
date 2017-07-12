@@ -79,5 +79,5 @@ Download
 
 Grab via Gradle:
 ```groovy
-compile 'eu.inloop:simplerecycleradapter:0.3.3'
+compile 'eu.inloop:simplerecycleradapter:0.3.4'
 ```

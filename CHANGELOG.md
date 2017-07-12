@@ -1,4 +1,8 @@
-## 0.3.2(2017-6-2)
+## 0.3.4(2017-7-12)
+
+- Add option to disable caching of inner clickable areas (useful for dynamic clickable fields) ([c2df705](https://github.com/inloop/SimpleRecyclerAdapter/commit/c2df705e3697270ee1bd2f2ce4e4fff1ab824567))
+
+## 0.3.3(2017-6-2)
 
 - BREAKING CHANGE: Change getItemViewType method signature to include item ([7f95a75](https://github.com/inloop/SimpleRecyclerAdapter/commit/7f95a75cb88e47917eb02dc2619d97283b1ce351))
 
